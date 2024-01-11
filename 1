@@ -1,0 +1,37 @@
+package dupadupa;
+
+public class Zad1Main {
+    public static void main(String[] args) {
+        String originalText = "KRYPTOLOGIA";
+        int shift = 25;
+
+        String encryptedText = encrypt(originalText, shift);
+        System.out.println("Zaszyfrowane: " + encryptedText);
+        String encryptedText2 = "JQXOSNKNFHZ";
+
+
+        String decryptedText = decrypt(encryptedText2, shift);
+        System.out.println("Odszyfrowane: " + decryptedText);
+    }
+
+    public static String encrypt(String text, int shift) {
+        String result = "";
+
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+
+            if (Character.isLetter(ch)) {
+                char shifted = (char) (((ch - 'A' + shift) % 26) + 'A');
+                result += shifted;
+            } else {
+                result += ch;
+            }
+        }
+
+        return result;
+    }
+    public static String decrypt(String text, int shift) {
+        return encrypt(text, 26 - shift); // Odwróć przesunięcie przy odszyfrowywaniu
+    }
+
+}
