@@ -1,0 +1,27 @@
+package dupadupa;
+
+public class Zad2Main {
+        public static String encrypt(String text, int shift) {
+            char[] charArray = text.toCharArray();
+
+            for (int i = 0; i < charArray.length; i++) {
+                char ch = charArray[i];
+
+                if (Character.isLetter(ch)) {
+                    char base = Character.isUpperCase(ch) ? 'A' : 'a';
+                    char encryptedChar = (char) (((ch - base + shift) % 26) + base);
+                    charArray[i] = encryptedChar;
+                }
+            }
+
+            return new String(charArray);
+        }
+
+        public static void main(String[] args) {
+            String originalText = "Pytanie: Jaki jest główny cel kryptografii?, Odpowiedź: Zabezpieczenie danych!!";
+            int shift = 3;
+
+            String encryptedText = encrypt(originalText, shift);
+            System.out.println("Zaszyfrowane: " + encryptedText);
+        }
+    }
