@@ -1,0 +1,47 @@
+package dupadupa;
+
+public class Zad5Main {
+
+        public static String encryptVigenere(String text, String key) {
+            StringBuilder encryptedText = new StringBuilder();
+            int textLength = text.length();
+            int keyLength = key.length();
+
+            for (int i = 0; i < textLength; i++) {
+                char currentChar = text.charAt(i);
+
+                if (Character.isLowerCase(currentChar)) {
+                    char keyChar = key.charAt(i % keyLength);
+                    int shift = keyChar - 'a';
+                    int originalPosition = currentChar - 'a';
+                    int newPosition = (originalPosition + shift) % 26;
+                    char newChar = (char) ('a' + newPosition);
+                    encryptedText.append(newChar);
+                } else {
+                    // Jeśli znak nie jest małą literą, pozostaw bez zmian
+                    encryptedText.append(currentChar);
+                }
+            }
+
+            return encryptedText.toString();
+        }
+
+       
+
+
+        public static void main(String[] args) {
+            // Przykładowy tekst do zaszyfrowania
+            String plainText = "jestemzadowolony";
+
+            // Przykładowy klucz szyfrujący
+            String key = "szyfrant";
+
+            // Szyfrowanie tekstu z użyciem klucza
+            String encryptedText = encryptVigenere(plainText, key);
+
+            // Wyświetlenie wyników
+            System.out.println("Oryginalny tekst: " + plainText);
+            System.out.println("Klucz szyfrujący: " + key);
+            System.out.println("Zaszyfrowany tekst: " + encryptedText);
+        }
+    }
