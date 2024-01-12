@@ -1,0 +1,279 @@
+public class Zad1Main {
+    public static void main(String[] args) {
+        String originalText = "KRYPTOLOGIA";
+        int shift = 25;
+
+        String encryptedText = encrypt(originalText, shift);
+        System.out.println("Zaszyfrowane: " + encryptedText);
+        String encryptedText2 = "JQXOSNKNFHZ";
+
+
+        String decryptedText = decrypt(encryptedText2, shift);
+        System.out.println("Odszyfrowane: " + decryptedText);
+    }
+
+    public static String encrypt(String text, int shift) {
+        String result = "";
+
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+
+            if (Character.isLetter(ch)) {
+                char shifted = (char) (((ch - 'A' + shift) % 26) + 'A');
+                result += shifted;
+            } else {
+                result += ch;
+            }
+        }
+
+        return result;
+    }
+    public static String decrypt(String text, int shift) {
+        return encrypt(text, 26 - shift); // Odwróć przesunięcie przy odszyfrowywaniu
+    }
+
+}
+public class Zad2Main {
+        public static String encrypt(String text, int shift) {
+            char[] charArray = text.toCharArray();
+
+            for (int i = 0; i < charArray.length; i++) {
+                char ch = charArray[i];
+
+                if (Character.isLetter(ch)) {
+                    char base = Character.isUpperCase(ch) ? 'A' : 'a';
+                    char encryptedChar = (char) (((ch - base + shift) % 26) + base);
+                    charArray[i] = encryptedChar;
+                }
+            }
+
+            return new String(charArray);
+        }
+
+        public static void main(String[] args) {
+            String originalText = "Pytanie: Jaki jest główny cel kryptografii?, Odpowiedź: Zabezpieczenie danych!!";
+            int shift = 3;
+
+            String encryptedText = encrypt(originalText, shift);
+            System.out.println("Zaszyfrowane: " + encryptedText);
+        }
+    }
+
+import java.io.*;
+
+
+public class Zad3Main {
+
+    public static void main(String[] args) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\ngreg\\IdeaProjects\\dupa\\src\\szyfr.txt"));
+            StringBuilder input = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                input.append(line).append("\n");
+            }
+            reader.close();
+            int key = 15;
+            String encrypted = ceasarCipherEncrypt(input.toString(), key);
+            BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"));
+            writer.append(encrypted);
+            writer.close();
+
+
+            BufferedReader reader2 = new BufferedReader(new FileReader("C:\\Users\\ngreg\\IdeaProjects\\dupa\\src\\szyfr.txt"));
+            String line2;
+            while ((line2 = reader2.readLine()) != null) {
+                input.append(line2).append("\n");
+            }
+            reader2.close();
+            String decrypted = ceasarCipherDecrypt(input.toString(), key);
+            BufferedWriter writer2 = new BufferedWriter(new FileWriter("decrypeted.txt"));
+            writer2.append(decrypted);
+            writer2.close();
+
+
+        } catch (IOException e) {
+            System.err.println("Bład obsługi pliku " + e.getMessage());
+        }
+    }
+
+    public static String ceasarCipherEncrypt(String text, int key) {
+        StringBuilder encryptedText = new StringBuilder();
+
+        for (int i = 0; i < text.length(); i++) {
+            char currentChar = text.charAt(i);
+
+            if (Character.isLetter(currentChar)) {
+                char base = Character.isUpperCase(currentChar) ? 'A' : 'a';
+                int originalAlphabetPosition = currentChar - base; // Obliczenie pozycji obecnego znaku w alfabecie
+                int newAlphabetPosition = (originalAlphabetPosition + key) % 26; // Obliczenie nowej pozycji literki po zastosowaniu szyfru Cezara
+                char newChar = (char) (base + newAlphabetPosition);   // Utworzenie zaszyfrowanego znaku na podstawie nowej pozycji w alfabecie i bazowej litery
+                encryptedText.append(newChar);  // Dodanie zaszyfrowanego znaku do zaszyfrowanego tekstu
+            } else {
+                encryptedText.append(currentChar);
+            }
+        }
+
+        return encryptedText.toString();
+    }
+
+
+    public static String ceasarCipherDecrypt(String text, int shift) {
+        return ceasarCipherEncrypt(text, 26 - shift);
+    }
+}
+
+import java.io.*;
+
+public class Zad4Main {
+
+
+
+        public static String encryptWithKey(String text, int key) {
+            StringBuilder encryptedText = new StringBuilder();
+            int textLength = text.length();
+
+            for (int i = 0; i < textLength; i++) {
+                char currentChar = text.charAt(i);
+
+                if (Character.isLowerCase(currentChar)) {
+                    int originalPosition = currentChar - 'a';
+                    int newPosition = (originalPosition + key) % 26;
+                    char newChar = (char) ('a' + newPosition);
+                    encryptedText.append(newChar);
+                } else {
+                    // Jeśli znak nie jest małą literą, pozostaw bez zmian
+                    encryptedText.append(currentChar);
+                }
+
+                // Zastosowanie klucza cyklicznie
+                key = (key + 1) % 10;
+            }
+
+            return encryptedText.toString();
+        }
+
+        public static void main(String[] args) {
+            try {
+                // Odczyt tekstu z pliku "szyfr.txt"
+                BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\ngreg\\IdeaProjects\\dupa\\src\\szyfr.txt"));
+                StringBuilder inputText = new StringBuilder();
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    inputText.append(line).append("\n");
+                }
+
+                reader.close();
+
+                // Przykładowy klucz: 2019
+                int key = 2019;
+
+                // Szyfrowanie tekstu z użyciem klucza
+                String encryptedText = encryptWithKey(inputText.toString(), key);
+
+                // Zapis zaszyfrowanego tekstu do pliku "zaszyfrowany.txt"
+                BufferedWriter writer = new BufferedWriter(new FileWriter("zaszyfrowany.txt"));
+                writer.write(encryptedText);
+                writer.close();
+
+                System.out.println("Zaszyfrowany tekst został zapisany do pliku \"zaszyfrowany.txt\".");
+            } catch (IOException e) {
+                System.err.println("Błąd podczas obsługi plików: " + e.getMessage());
+            }
+        }
+
+}
+
+public class Zad5Main {
+
+        public static String encryptVigenere(String text, String key) {
+            StringBuilder encryptedText = new StringBuilder();
+            int textLength = text.length();
+            int keyLength = key.length();
+
+            for (int i = 0; i < textLength; i++) {
+                char currentChar = text.charAt(i);
+
+                if (Character.isLowerCase(currentChar)) {
+                    char keyChar = key.charAt(i % keyLength);
+                    int shift = keyChar - 'a';
+                    int originalPosition = currentChar - 'a';
+                    int newPosition = (originalPosition + shift) % 26;
+                    char newChar = (char) ('a' + newPosition);
+                    encryptedText.append(newChar);
+                } else {
+                    // Jeśli znak nie jest małą literą, pozostaw bez zmian
+                    encryptedText.append(currentChar);
+                }
+            }
+
+            return encryptedText.toString();
+        }
+
+       
+
+
+        public static void main(String[] args) {
+            // Przykładowy tekst do zaszyfrowania
+            String plainText = "jestemzadowolony";
+
+            // Przykładowy klucz szyfrujący
+            String key = "szyfrant";
+
+            // Szyfrowanie tekstu z użyciem klucza
+            String encryptedText = encryptVigenere(plainText, key);
+
+            // Wyświetlenie wyników
+            System.out.println("Oryginalny tekst: " + plainText);
+            System.out.println("Klucz szyfrujący: " + key);
+            System.out.println("Zaszyfrowany tekst: " + encryptedText);
+        }
+    }
+
+public class Zad5Main {
+
+
+        public static String decryptVigenere(String text, String key) {
+            StringBuilder decryptedText = new StringBuilder();
+            int textLength = text.length();
+            int keyLength = key.length();
+
+            for (int i = 0; i < textLength; i++) {
+                char currentChar = text.charAt(i);
+
+                if (Character.isLowerCase(currentChar)) {
+                    char keyChar = key.charAt(i % keyLength);
+                    int shift = keyChar - 'a';
+                    int originalPosition = currentChar - 'a';
+                    // Odwrócenie przesunięcia przy deszyfrowaniu
+                    int newPosition = (originalPosition - shift + 26) % 26;
+                    char newChar = (char) ('a' + newPosition);
+                    decryptedText.append(newChar);
+                } else {
+                    // Jeśli znak nie jest małą literą, pozostaw bez zmian
+                    decryptedText.append(currentChar);
+                }
+            }
+
+            return decryptedText.toString();
+        }
+
+
+        public static void main(String[] args) {
+            // Przykładowy tekst do zaszyfrowania
+            String plainText = "jestemzadowolony";
+
+            // Przykładowy klucz szyfrujący
+            String key = "szyfrant";
+
+            // Deszyfrowanie zaszyfrowanego tekstu
+            String decryptedText = decryptVigenere(plainText, key);
+
+            // Wyświetlenie wyników
+            System.out.println("Oryginalny tekst: " + plainText);
+            System.out.println("Klucz szyfrujący: " + key);
+           System.out.println("Odszyfrowany tekst: " + decryptedText);
+        }
+    }
+
